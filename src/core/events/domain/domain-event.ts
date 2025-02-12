@@ -1,4 +1,4 @@
-import { BaseEvent } from "./base/base-event";
+import { BaseEvent } from '../base/base-event';
 
 export abstract class DomainEvent extends BaseEvent {
   public readonly aggregateId: string;

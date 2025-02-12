@@ -1,4 +1,7 @@
-import { ISpecification } from '../interfaces/specifications/specification.interface';
+import { ISpecification } from '../../interfaces/specifications/specification.interface';
+import { AndSpecification } from './and.specification';
+import { OrSpecification } from './or.specification';
+import { NotSpecification } from './not.specification';
 
 export abstract class BaseSpecification<T> implements ISpecification<T> {
   abstract isSatisfiedBy(item: T): boolean;
