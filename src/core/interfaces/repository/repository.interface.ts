@@ -40,5 +40,5 @@ export interface IRepository<T extends AggregateRoot<TId>, TId> {
   orderBy(propertyPath: string, direction: 'ASC' | 'DESC'): IRepository<T, TId>;
 
   // Transaction support
-  withTransaction(transaction: any): IRepository<T, TId>;
+  withTransaction(transaction: any): Promise<IRepository<T, TId>>;
 }

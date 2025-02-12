@@ -1,7 +1,6 @@
-import { BaseCommand } from "../commands/base.command";
-import { ICommandHandler } from "@nestjs/cqrs";
-import { LoggerService } from "@nestjs/common";
-
+import { BaseCommand } from '../commands/base.command';
+import { ICommandHandler } from '@nestjs/cqrs';
+import { LoggerService } from '@nestjs/common';
 
 export abstract class BaseCommandHandler<TCommand extends BaseCommand, TResult>
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment

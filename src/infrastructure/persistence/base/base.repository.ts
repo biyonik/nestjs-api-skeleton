@@ -7,7 +7,6 @@ import {
 import { AggregateRoot } from '../../../core/domain/base/aggregate-root.base';
 import { IRepository } from 'src/core/interfaces/repository/repository.interface';
 import { ISpecification } from '../../../core/interfaces/specifications/specification.interface';
-import { Page } from '../../../core/shared/types/page.type';
 
 export abstract class BaseRepository<T extends AggregateRoot<TId>, TId>
   implements IRepository<T, TId>
@@ -76,11 +75,45 @@ export abstract class BaseRepository<T extends AggregateRoot<TId>, TId>
     return queryBuilder.getCount();
   }
 
+  include(...propertyPath: string[]): IRepository<T, TId> {
+    const queryBuilder = this.createQueryBuilder();
+    propertyPath.forEach((path) => {
+      queryBuilder.leftJoinAndSelect(`${queryBuilder.alias}.${path}`, path);
+    });
+    return this;
+  }
+
+  orderBy(
+    propertyPath: string,
+    direction: 'ASC' | 'DESC',
+  ): IRepository<T, TId> {
+    const queryBuilder = this.createQueryBuilder();
+    queryBuilder.orderBy(`${queryBuilder.alias}.${propertyPath}`, direction);
+    return this;
+  }
+
+  async withTransaction(
+    transaction: EntityManager,
+  ): Promise<IRepository<T, TId>> {
+    return new (this.constructor as any)(
+      transaction.getRepository(this.repository.target),
+      transaction,
+    );
+  }
+
   async findWithPagination(
     page: number,
     pageSize: number,
     specification?: ISpecification<T>,
-  ): Promise<Page<T>> {
+  ): Promise<{
+    items: T[];
+    total: number;
+    page: number;
+    pageSize: number;
+    totalPages: number;
+    hasNext: boolean;
+    hasPrevious: boolean;
+  }> {
     const queryBuilder = this.createQueryBuilder();
 
     if (specification) {
